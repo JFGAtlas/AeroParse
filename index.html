@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroParse - 抖音 & TikTok 无水印极速解析</title>
+    <meta name="description" content="AeroParse 是一款设计优雅、极速流畅的抖音及TikTok视频/图片无水印解析工具。只需输入分享链接，即可一键预览并下载高清无水印媒体。">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Evil0ctal/Douyin_TikTok_Download_API/main/logo/logo192.png">
+</head>
+<body>
+    <!-- Background Glows -->
+    <div class="glow-bg">
+        <div class="glow-circle glow-purple"></div>
+        <div class="glow-circle glow-blue"></div>
+        <div class="glow-circle glow-indigo"></div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 8.5C11 7.67 11.67 7 12.5 7C13.33 7 14 7.67 14 8.5C14 9.33 13.33 10 12.5 10C11.67 10 11 9.33 11 8.5ZM16.2 16.2C15.81 16.59 15.18 16.59 14.79 16.2L12.5 13.91L10.21 16.2C9.82 16.59 9.19 16.59 8.8 16.2C8.41 15.81 8.41 15.18 8.8 14.79L11.09 12.5L8.8 10.21C8.41 9.82 8.41 9.19 8.8 8.8C9.19 8.41 9.82 8.41 10.21 8.8L12.5 11.09L14.79 8.8C15.18 8.41 15.81 8.41 16.2 8.8C16.59 9.19 16.59 9.82 16.2 10.21L13.91 12.5L16.2 14.79C16.59 15.18 16.59 15.81 16.2 16.2Z" fill="url(#logo-grad)"/>
+                        <defs>
+                            <linearGradient id="logo-grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#a855f7"/>
+                                <stop offset="1" stop-color="#3b82f6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>AeroParse</h1>
+            </div>
+            <div class="header-actions">
+                <button id="settings-toggle" class="icon-btn" title="配置 API">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Settings Drawer (Hidden by default) -->
+        <section id="settings-drawer" class="settings-drawer card hidden">
+            <h3>API 配置</h3>
+            <div class="input-group">
+                <label for="api-base-url">解析服务 API 基础地址</label>
+                <div class="input-wrapper">
+                    <input type="text" id="api-base-url" placeholder="例如: http://localhost:8000" value="">
+                    <button id="save-settings" class="btn btn-primary btn-sm">保存</button>
+                </div>
+                <small class="tip">留空将自动根据当前网页域名检测或使用默认本地端口(80/8000)。</small>
+            </div>
+        </section>
+
+        <!-- Main Card Interface -->
+        <section class="main-card card">
+            <h2 class="card-title">一键解析，高清去水印</h2>
+            <p class="card-subtitle">支持抖音/TikTok单个视频、图集、主页分享链接</p>
+
+            <!-- Input Form -->
+            <form id="parse-form" class="parse-form">
+                <div class="search-box">
+                    <div class="search-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                    </div>
+                    <input type="text" id="share-url" placeholder="请粘贴视频/图集分享链接，例如: https://v.douyin.com/..." autocomplete="off" required>
+                    <button type="button" id="paste-btn" class="paste-btn" title="粘贴剪贴板内容">
+                        粘贴
+                    </button>
+                </div>
+                <button type="submit" id="submit-btn" class="submit-btn">
+                    <span class="btn-text">立即解析</span>
+                    <span class="btn-loader hidden">
+                        <span class="spinner"></span>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Supported Platforms Badge -->
+            <div class="platforms">
+                <span class="platform-badge douyin">
+                    <span class="badge-dot"></span>
+                    抖音 Douyin
+                </span>
+                <span class="platform-badge tiktok">
+                    <span class="badge-dot"></span>
+                    TikTok
+                </span>
+            </div>
+        </section>
+
+        <!-- Loading Skeleton -->
+        <div id="loader" class="loader card hidden">
+            <div class="skeleton-media"></div>
+            <div class="skeleton-content">
+                <div class="skeleton-line title"></div>
+                <div class="skeleton-line author"></div>
+                <div class="skeleton-line desc-1"></div>
+                <div class="skeleton-line desc-2"></div>
+            </div>
+        </div>
+
+        <!-- Result Card -->
+        <section id="result-card" class="result-card card hidden">
+            <div class="result-grid">
+                <!-- Media Preview Panel (Left) -->
+                <div class="media-preview-container">
+                    <!-- Video Player Container -->
+                    <div id="video-preview-wrapper" class="media-wrapper hidden">
+                        <video id="video-player" controls preload="metadata" playsinline>
+                            您的浏览器不支持 video 标签播放预览。
+                        </video>
+                    </div>
+                    <!-- Image Carousel Container -->
+                    <div id="image-preview-wrapper" class="media-wrapper hidden">
+                        <div class="carousel-container">
+                            <div id="carousel-slides" class="carousel-slides">
+                                <!-- Dynamic Slides -->
+                            </div>
+                            <button class="carousel-control prev" id="carousel-prev" type="button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <button class="carousel-control next" id="carousel-next" type="button">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                            <div class="carousel-dots" id="carousel-dots"></div>
+                        </div>
+                    </div>
+                    <!-- Default Cover Display -->
+                    <div id="cover-display-wrapper" class="media-wrapper">
+                        <img id="media-cover" src="" alt="封面图">
+                    </div>
+                </div>
+
+                <!-- Info & Download Panel (Right) -->
+                <div class="info-download-container">
+                    <!-- Author Information -->
+                    <div class="author-info">
+                        <img id="author-avatar" src="https://raw.githubusercontent.com/Evil0ctal/Douyin_TikTok_Download_API/main/logo/logo192.png" alt="头像">
+                        <div class="author-details">
+                            <h4 id="author-name">创作者昵称</h4>
+                            <p id="author-uid">抖音ID/UID</p>
+                        </div>
+                    </div>
+
+                    <!-- Post Description -->
+                    <p id="post-desc" class="post-desc">作品标题与描述内容</p>
+
+                    <!-- Metrics / Statistics -->
+                    <div class="metrics">
+                        <div class="metric-item">
+                            <span class="metric-icon">❤️</span>
+                            <span id="metric-likes">0</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-icon">💬</span>
+                            <span id="metric-comments">0</span>
+                        </div>
+                        <div class="metric-item">
+                            <span class="metric-icon">🔄</span>
+                            <span id="metric-shares">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Divider -->
+                    <hr class="card-divider">
+
+                    <!-- Actions / Download Area -->
+                    <div class="download-actions">
+                        <h3>去水印下载链接</h3>
+                        
+                        <!-- Video Mode Downloads -->
+                        <div id="video-downloads" class="download-buttons">
+                            <a id="btn-dl-video" href="#" target="_blank" class="btn btn-gradient btn-full">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                下载无水印高清视频 (1080P)
+                            </a>
+                            <a id="btn-dl-video-fallback" href="#" target="_blank" rel="noreferrer" class="btn btn-secondary btn-full">
+                                备用无水印直链 (302 跳转)
+                            </a>
+                        </div>
+
+                        <!-- Image Mode Downloads -->
+                        <div id="image-downloads" class="download-buttons hidden">
+                            <button id="btn-dl-zip" class="btn btn-gradient btn-full">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                批量打包下载无水印图片 (.zip)
+                            </button>
+                            <div class="image-links-grid" id="image-links-grid">
+                                <!-- Individual image URLs -->
+                            </div>
+                        </div>
+
+                        <!-- Music Download -->
+                        <div id="audio-download-container">
+                            <a id="btn-dl-audio" href="#" target="_blank" rel="noreferrer" class="btn btn-outline btn-full">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn-icon"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                                下载提取作品背景音乐 (MP3)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Records -->
+        <section id="history-section" class="history-section card hidden">
+            <div class="history-header">
+                <h3>最近解析记录</h3>
+                <button id="clear-history" class="text-btn">清空历史</button>
+            </div>
+            <div id="history-list" class="history-list">
+                <!-- Dynamically loaded list -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>&copy; 2026 AeroParse. All Rights Reserved.</p>
+        <p class="disclaimer">免责声明：本网站仅限用于学习和个人交流目的。请尊重创作者的版权，切勿传播侵权内容。</p>
+    </footer>
+
+    <!-- Toast Notice Container -->
+    <div id="toast" class="toast">提示信息</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

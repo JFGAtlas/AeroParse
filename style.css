@@ -931,10 +931,28 @@ body {
     gap: 8px;
 }
 
+.contact-info {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.app-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.app-footer a:hover {
+    color: #a855f7;
+    text-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+
 .disclaimer {
     font-size: 11px;
     max-width: 600px;
     margin: 0 auto;
+    margin-top: 4px;
 }
 
 /* Toast */

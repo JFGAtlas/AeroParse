@@ -517,9 +517,15 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('下载已开始！');
         } catch (err) {
             console.error('CORS proxy download failed:', err);
-            // Fallback to opening the play URL directly
-            window.open(url, '_blank');
-            showToast('代理直接下载失败，已在新窗口为您打开直链，请右键另存为', 'warning');
+            // Fallback to opening the play URL directly without referrer to avoid 403 Forbidden
+            const a = document.createElement('a');
+            a.href = url;
+            a.target = '_blank';
+            a.rel = 'noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('代理下载失败，已为您打开直链，请在新窗口中右键另存为视频', 'warning');
         }
     }
 

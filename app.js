@@ -142,7 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
             return 'http://localhost:8000';
         }
-        return origin;
+        // Default to the public API server if hosted on GitHub Pages or other external static hosts
+        return 'https://api.douyin.wtf';
     }
 
     // Async API Fetcher

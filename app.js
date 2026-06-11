@@ -254,7 +254,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set up direct download linking to avoid CORS/Headers issues (resolves 302 stream in the backend)
             const base = getApiBase();
             const downloadUrl = `${base}/api/download?url=${encodeURIComponent(originalUrl)}&with_watermark=false`;
-            btnDlVideo.href = downloadUrl;
+            
+            const isLocal = base.includes('localhost') || base.includes('127.0.0.1');
+            if (!isLocal) {
+                btnDlVideo.href = '#';
+                btnDlVideo.onclick = (e) => {
+                    e.preventDefault();
+                    downloadBlob(playUrl, `${data.platform}_${data.video_id}.mp4`);
+                };
+            } else {
+                btnDlVideo.href = downloadUrl;
+                btnDlVideo.onclick = null;
+            }
             btnDlVideoFallback.href = playUrl || '#';
             
         } else if (data.type === 'image') {
@@ -307,9 +318,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Set Zip download link
             const base = getApiBase();
-            btnDlZip.onclick = () => {
-                window.open(`${base}/api/download?url=${encodeURIComponent(originalUrl)}&with_watermark=false`);
-            };
+            const isLocal = base.includes('localhost') || base.includes('127.0.0.1');
+            if (!isLocal) {
+                btnDlZip.onclick = (e) => {
+                    e.preventDefault();
+                    showToast('由于公共接口限制，请使用下方按钮单张下载图片', 'warning');
+                };
+            } else {
+                btnDlZip.onclick = () => {
+                    window.open(`${base}/api/download?url=${encodeURIComponent(originalUrl)}&with_watermark=false`);
+                };
+            }
 
         } else {
             // Fallback Cover
@@ -476,6 +495,32 @@ document.addEventListener('DOMContentLoaded', () => {
             return (num / 10000).toFixed(1) + 'w';
         }
         return num.toLocaleString();
+    }
+
+    // Client-side CORS-proxied file downloader
+    async function downloadBlob(url, filename) {
+        try {
+            showToast('正在通过代理准备下载，请稍候...', 'warning');
+            // Prepend CORS proxy
+            const proxyUrl = `https://corsproxy.io/?` + encodeURIComponent(url);
+            const response = await fetch(proxyUrl);
+            if (!response.ok) throw new Error('Network response was not ok');
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+            showToast('下载已开始！');
+        } catch (err) {
+            console.error('CORS proxy download failed:', err);
+            // Fallback to opening the play URL directly
+            window.open(url, '_blank');
+            showToast('代理直接下载失败，已在新窗口为您打开直链，请右键另存为', 'warning');
+        }
     }
 
     // Toast Notifications Trigger

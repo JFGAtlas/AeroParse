@@ -149,7 +149,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Async API Fetcher
     async function fetchVideoData(url) {
         const base = getApiBase();
-        const apiUrl = `${base}/api/hybrid/video_data?url=${encodeURIComponent(url)}&minimal=true`;
+        let apiUrl = `${base}/api/hybrid/video_data?url=${encodeURIComponent(url)}&minimal=true`;
+        
+        // If hosted on a remote server (like GitHub Pages) and requesting the default public API,
+        // use a browser CORS proxy to bypass CORS restrictions of api.douyin.wtf.
+        const origin = window.location.origin;
+        if (!origin.includes('localhost') && !origin.includes('127.0.0.1') && base.includes('douyin.wtf')) {
+            apiUrl = `https://corsproxy.io/?` + encodeURIComponent(apiUrl);
+        }
         
         try {
             const controller = new AbortController();

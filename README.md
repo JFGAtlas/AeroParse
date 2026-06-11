@@ -66,3 +66,19 @@ This project is for educational and data analysis purposes only. Please respect 
 
 ### 免责声明
 本网站及相关代码仅限用于学习和个人技术交流目的。请尊重创作者的版权，切勿将下载的内容用于商业用途或进行非授权传播。
+
+---
+
+## 🎁 Statement & Donation / 申明与捐赠
+
+- **慈善开源项目**
+- **无广告**
+- **永久更新**
+- **免费使用**
+
+如果您觉得本项目对您有所帮助，欢迎捐赠支持我们的持续维护：
+
+- **EVM (ETH/BSC/Polygon)**: `0x3EE918603d5a1c0f983BEC5B5d8C301F8ed58A2C`
+- **Solana (SOL)**: `2LEDYj19kormPezoiFgZAguyCVsfaM3HExsYe2NWpNqk`
+- **Bitcoin (BTC)**: `bc1qs2nwumk24fjtk574f0awaxnh7jl9v7shrd5yw7`
+
